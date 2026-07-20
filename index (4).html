@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e2b29">
+<title>The Rebuild — Shoulder Recovery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0e2b29;
+    --ink-2:#082019;
+    --paper:#eef2ef;
+    --paper-2:#e3e9e4;
+    --card:#ffffff;
+    --line:#d3ddd7;
+    --text:#17302c;
+    --text-soft:#4c635c;
+    --text-faint:#7d928a;
+    --bronze:#a86f37;
+    --bronze-deep:#83531f;
+    --bronze-soft:#f3e7d5;
+    --go:#3f9d78;
+    --go-bg:#e4f2ea;
+    --steady:#c78a1c;
+    --steady-bg:#f8efd7;
+    --stop:#bf4e3c;
+    --stop-bg:#f8e3de;
+    --radius:16px;
+    --radius-sm:11px;
+    --shadow:0 1px 2px rgba(14,43,41,.05), 0 8px 24px rgba(14,43,41,.06);
+    --maxw:660px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--text);
+    font-size:17px;
+    line-height:1.5;
+    padding-bottom:96px;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 18px}
+  h1,h2,h3{line-height:1.15}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .serif{font-family:'Fraunces',Georgia,serif}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--text-faint);font-weight:500;
+  }
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--ink);color:#f4f7f4;font-weight:600;font-size:16px;
+    padding:15px 22px;border-radius:var(--radius-sm);width:100%;
+    transition:transform .08s ease, background .15s ease;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.bronze{background:var(--bronze)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);font-weight:600}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn-sm{padding:11px 15px;font-size:14px;width:auto;border-radius:9px}
+
+  /* ---------- Top bar ---------- */
+  header.top{
+    position:sticky;top:0;z-index:40;
+    background:var(--ink);color:#eaf1ee;
+    padding:calc(env(safe-area-inset-top) + 12px) 0 12px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .top .wrap{display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:baseline;gap:9px}
+  .brand .mark{font-family:'Fraunces',serif;font-weight:600;font-size:20px;letter-spacing:-.01em;color:#f4f7f4}
+  .brand .mark em{color:var(--bronze);font-style:normal}
+  .daychip{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;
+    color:#cbdad3;background:rgba(255,255,255,.07);padding:5px 11px;border-radius:20px;
+    letter-spacing:.03em;
+  }
+
+  /* ---------- Bottom nav ---------- */
+  nav.tabs{
+    position:fixed;bottom:0;left:0;right:0;z-index:45;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+    padding:8px 0 calc(env(safe-area-inset-bottom) + 8px);
+  }
+  nav.tabs .wrap{display:flex;justify-content:space-around}
+  .tab{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:5px 2px;color:var(--text-faint);font-size:11px;font-weight:600;letter-spacing:.02em;
+  }
+  .tab svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.7}
+  .tab.active{color:var(--bronze)}
+
+  .view{display:none;padding-top:20px;animation:fade .3s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px;margin-bottom:16px;
+  }
+  .card.flush{padding:0;overflow:hidden}
+
+  /* ---------- Hero / phase ---------- */
+  .phasehero{
+    background:linear-gradient(160deg,var(--ink),var(--ink-2));
+    color:#eef4f1;border:none;position:relative;overflow:hidden;
+  }
+  .phasehero .blueprint{position:absolute;right:-30px;top:-20px;width:190px;height:190px;opacity:.16}
+  .phasehero .eyebrow{color:var(--bronze)}
+  .phasehero h2{font-family:'Fraunces',serif;font-weight:500;font-size:30px;margin:8px 0 4px;letter-spacing:-.01em}
+  .phasehero .sub{color:#b9ccc4;font-size:14.5px;max-width:78%}
+  .phasehero .prog{margin-top:18px}
+  .spine{display:flex;gap:2px;align-items:flex-end;height:26px;margin-top:6px}
+  .spine i{flex:1;background:rgba(255,255,255,.13);border-radius:1px;height:9px;transition:height .3s,background .3s}
+  .spine i.done{background:var(--bronze);height:15px}
+  .spine i.today{background:#f4f7f4;height:22px}
+  .spine i.p2{opacity:1}
+  .prog-label{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#9fb5ac;margin-top:8px;letter-spacing:.04em}
+
+  /* ---------- Daily line ---------- */
+  .dailyline{padding:22px 20px;border-left:3px solid var(--bronze)}
+  .dailyline p{font-family:'Fraunces',serif;font-size:19px;line-height:1.4;color:var(--text);font-weight:400}
+
+  /* ---------- Check-in ---------- */
+  .section-h{display:flex;align-items:center;gap:10px;margin:26px 2px 12px}
+  .section-h h3{font-size:15px;font-weight:700;letter-spacing:.01em}
+  .section-h .num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--bronze);font-weight:600;border:1.5px solid var(--bronze-soft);background:var(--bronze-soft);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+  .q{margin-bottom:20px}
+  .q:last-child{margin-bottom:0}
+  .q label{display:block;font-weight:600;font-size:15px;margin-bottom:10px}
+  .q .hint{font-weight:400;color:var(--text-faint);font-size:13px}
+  .opts{display:flex;gap:8px;flex-wrap:wrap}
+  .opt{
+    flex:1;min-width:0;text-align:center;padding:12px 8px;border:1.5px solid var(--line);
+    border-radius:10px;background:var(--paper);font-weight:600;font-size:14.5px;color:var(--text-soft);
+    transition:.12s;
+  }
+  .opt.sel{border-color:var(--ink);background:var(--ink);color:#f4f7f4}
+  .opt small{display:block;font-weight:400;font-size:11px;opacity:.7;margin-top:2px}
+
+  /* pain slider */
+  .painwrap{display:flex;align-items:center;gap:14px}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:8px;border-radius:6px;flex:1;
+    background:linear-gradient(90deg,var(--go),var(--steady) 55%,var(--stop));outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:pointer}
+  .painval{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:26px;width:64px;text-align:center}
+  .painval small{display:block;font-size:10px;color:var(--text-faint);font-weight:500;letter-spacing:.05em}
+
+  /* ---------- Verdict ---------- */
+  .verdict{border-radius:var(--radius);padding:20px;margin-bottom:16px;border:1.5px solid}
+  .verdict .vhead{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  .verdict .badge{font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:.06em;font-size:13px;padding:6px 13px;border-radius:20px;color:#fff}
+  .verdict h3{font-family:'Fraunces',serif;font-weight:500;font-size:23px}
+  .verdict p{font-size:14.5px;color:var(--text-soft);line-height:1.5}
+  .v-go{background:var(--go-bg);border-color:#bfe0d0}
+  .v-go .badge{background:var(--go)} .v-go h3{color:#1f6b4d}
+  .v-steady{background:var(--steady-bg);border-color:#ecdcae}
+  .v-steady .badge{background:var(--steady)} .v-steady h3{color:#8a6210}
+  .v-stop{background:var(--stop-bg);border-color:#eec5bc}
+  .v-stop .badge{background:var(--stop)} .v-stop h3{color:#8f3627}
+
+  /* ---------- Session ---------- */
+  .block-label{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--bronze);font-weight:600;margin:22px 4px 10px;display:flex;align-items:center;gap:8px}
+  .block-label::after{content:"";flex:1;height:1px;background:var(--line)}
+  .ex{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);
+    margin-bottom:9px;overflow:hidden;transition:border-color .15s;
+  }
+  .ex.done{border-color:#bfe0d0;background:#f7fbf9}
+  .ex-main{display:flex;align-items:flex-start;gap:13px;padding:15px 16px}
+  .check{
+    flex-shrink:0;width:26px;height:26px;border-radius:8px;border:2px solid var(--line);
+    background:#fff;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:.15s;
+  }
+  .check svg{width:15px;height:15px;stroke:#fff;stroke-width:3;fill:none;opacity:0}
+  .ex.done .check{background:var(--go);border-color:var(--go)}
+  .ex.done .check svg{opacity:1}
+  .ex-body{flex:1;min-width:0}
+  .ex-name{font-weight:600;font-size:15.5px;line-height:1.3}
+  .ex.done .ex-name{color:var(--text-soft)}
+  .ex-dose{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--bronze-deep);margin-top:3px;font-weight:500}
+  .ex-toggle{font-size:12.5px;color:var(--text-faint);font-weight:600;margin-top:7px;display:inline-flex;align-items:center;gap:4px}
+  .ex-toggle svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;transition:transform .2s}
+  .ex.open .ex-toggle svg{transform:rotate(180deg)}
+  .ex-detail{max-height:0;overflow:hidden;transition:max-height .3s ease;background:var(--paper)}
+  .ex.open .ex-detail{max-height:720px}
+  .ex-detail-inner{padding:2px 16px 16px 55px;font-size:14px;color:var(--text-soft);line-height:1.55}
+  .ex-detail-inner .cue{margin:6px 0}
+  .ex-detail-inner .cue b{color:var(--text);font-weight:600}
+  .ex-safe{margin-top:10px;padding:9px 12px;background:var(--bronze-soft);border-radius:8px;font-size:13px;color:var(--bronze-deep)}
+  .ex-safe b{font-weight:600}
+
+  .advance{background:var(--bronze-soft);border:1.5px dashed var(--bronze);border-radius:var(--radius-sm);padding:16px;margin:14px 0}
+  .advance h4{font-size:14.5px;color:var(--bronze-deep);margin-bottom:5px;display:flex;align-items:center;gap:7px}
+  .advance p{font-size:13.5px;color:var(--bronze-deep);margin-bottom:11px;line-height:1.5}
+
+  .doneBanner{text-align:center;padding:34px 20px}
+  .doneBanner .ring{width:70px;height:70px;margin:0 auto 14px;border-radius:50%;background:var(--go-bg);display:flex;align-items:center;justify-content:center}
+  .doneBanner .ring svg{width:34px;height:34px;stroke:var(--go);stroke-width:2.5;fill:none}
+  .doneBanner h3{font-family:'Fraunces',serif;font-size:24px;font-weight:500;margin-bottom:6px}
+  .doneBanner p{color:var(--text-soft);font-size:14.5px}
+
+  /* ---------- Progress view ---------- */
+  .stat-row{display:flex;gap:12px;margin-bottom:16px}
+  .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:16px;text-align:center;box-shadow:var(--shadow)}
+  .stat .n{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;color:var(--ink)}
+  .stat .l{font-size:11.5px;color:var(--text-faint);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-top:2px}
+  .sparkwrap{padding:8px 2px}
+  .spark-legend{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-faint);margin-top:4px}
+  .phase-track{margin-top:6px}
+  .phase-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .phase-row:last-child{border:none}
+  .phase-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+  .phase-row .pn{font-weight:600;font-size:14.5px}
+  .phase-row .pd{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-faint)}
+  .phase-row.cur{background:var(--bronze-soft);margin:0 -12px;padding:12px;border-radius:9px;border:none}
+
+  /* ---------- Library ---------- */
+  .lib-cat{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--bronze);font-weight:600;margin:20px 4px 10px}
+  .lib-item{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:15px 16px;margin-bottom:9px}
+  .lib-item h4{font-size:15.5px;font-weight:600;margin-bottom:3px}
+  .lib-item .tg{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-faint);margin-bottom:8px}
+  .lib-item p{font-size:14px;color:var(--text-soft);line-height:1.55;margin-bottom:5px}
+
+  /* ---------- About / safety ---------- */
+  .redflags{background:var(--stop-bg);border:1.5px solid #eec5bc;border-radius:var(--radius);padding:20px;margin-bottom:16px}
+  .redflags h3{color:#8f3627;font-size:16px;margin-bottom:10px;display:flex;align-items:center;gap:9px}
+  .redflags ul{list-style:none;font-size:14.5px;color:#7a3123;line-height:1.5}
+  .redflags li{padding:6px 0 6px 24px;position:relative}
+  .redflags li::before{content:"";position:absolute;left:2px;top:13px;width:7px;height:7px;border-radius:50%;background:var(--stop)}
+  .principle{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .principle:last-child{border:none}
+  .principle .pi{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--bronze);font-size:13px;flex-shrink:0;width:24px}
+  .principle p{font-size:14.5px;color:var(--text-soft);line-height:1.5}
+  .principle b{color:var(--text);font-weight:600}
+  .disclaimer{font-size:12.5px;color:var(--text-faint);line-height:1.55;padding:18px;background:var(--paper-2);border-radius:var(--radius-sm);margin-top:8px}
+
+  /* ---------- Modal / gate ---------- */
+  .overlay{position:fixed;inset:0;z-index:100;background:rgba(8,32,25,.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}
+  .overlay.show{display:flex}
+  .modal{background:var(--card);border-radius:20px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+  .modal-in{padding:28px 24px 24px}
+  .modal .mk{font-family:'Fraunces',serif;font-weight:600;font-size:15px;color:var(--bronze);letter-spacing:.02em}
+  .modal .mk em{font-style:normal;color:var(--ink)}
+  .modal h2{font-family:'Fraunces',serif;font-weight:500;font-size:26px;margin:6px 0 14px;line-height:1.2}
+  .modal p{font-size:15px;color:var(--text-soft);line-height:1.6;margin-bottom:14px}
+  .ack{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:10px;cursor:pointer;transition:.12s}
+  .ack.on{border-color:var(--go);background:var(--go-bg)}
+  .ack .box{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.12s}
+  .ack .box svg{width:14px;height:14px;stroke:#fff;stroke-width:3;fill:none;opacity:0}
+  .ack.on .box{background:var(--go);border-color:var(--go)}
+  .ack.on .box svg{opacity:1}
+  .ack span{font-size:14px;line-height:1.45;color:var(--text)}
+  .field{margin:16px 0}
+  .field label{font-size:13px;font-weight:600;color:var(--text-soft);display:block;margin-bottom:6px}
+  .field input[type=date]{font-family:inherit;font-size:16px;padding:12px;border:1.5px solid var(--line);border-radius:10px;width:100%;background:var(--paper)}
+
+  .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#f4f7f4;padding:13px 22px;border-radius:30px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;transition:.3s;z-index:80;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .mini-link{color:var(--bronze-deep);font-weight:600;font-size:14px;text-decoration:underline;text-underline-offset:3px}
+  .settings-row{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}
+  .settings-row:last-child{border:none}
+  .settings-row .sl{font-size:14.5px;font-weight:600}
+  .settings-row .sd{font-size:12.5px;color:var(--text-faint)}
+  .tog{width:50px;height:29px;border-radius:20px;background:var(--line);position:relative;transition:.2s;flex-shrink:0}
+  .tog.on{background:var(--go)}
+  .tog::after{content:"";position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .tog.on::after{left:24px}
+
+  @media(max-width:400px){body{font-size:16px}.phasehero h2{font-size:26px}.painval{font-size:22px;width:54px}}
+  @media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+
+<!-- ============ ONBOARDING GATE ============ -->
+<div class="overlay" id="gate">
+  <div class="modal">
+    <div class="modal-in">
+      <div class="mk"><em>The Rebuild</em> · before you begin</div>
+      <h2>A careful, honest shoulder rebuild.</h2>
+      <p>This is a 90-day, evidence-based rehab program built around one rule: <b>your shoulder sets the pace, not the calendar.</b> It progresses only when the joint earns it — measured by how you feel the <b>morning after</b>, not mid-workout.</p>
+      <p>Because you've had prior shoulder surgeries and a suspected labral issue, this program is only safe as a <b>complement to real medical care</b> — not a replacement for it. Please confirm:</p>
+
+      <div class="ack" id="ack1" onclick="toggleAck('ack1')">
+        <div class="box"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></div>
+        <span>I've had (or will get) this cleared by my surgeon or physical therapist before starting, and I'll bring them this program.</span>
+      </div>
+      <div class="ack" id="ack2" onclick="toggleAck('ack2')">
+        <div class="box"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></div>
+        <span>I understand the red-flag signs (below) and will stop and seek care if they appear, rather than pushing through.</span>
+      </div>
+
+      <div class="redflags" style="margin:16px 0 4px">
+        <h3>⚠ Stop and call your provider if you get</h3>
+        <ul>
+          <li>Sharp pain, catching, locking, or a "dead-arm" feeling</li>
+          <li>A sense the shoulder is slipping or about to pop out</li>
+          <li>Night pain that keeps getting worse over days</li>
+          <li>New weakness, numbness, or tingling down the arm</li>
+          <li>Any pain above 3/10 that doesn't settle by the next morning</li>
+        </ul>
+      </div>
+
+      <div class="field">
+        <label>What's today's date? (Day 1 of your rebuild)</label>
+        <input type="date" id="startDate">
+      </div>
+
+      <button class="btn bronze" id="beginBtn" disabled onclick="beginProgram()">Begin the rebuild</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="mark">The <em>Rebuild</em></span></div>
+    <div class="daychip" id="daychip">Day 1 / 90</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===== TODAY ===== -->
+  <section class="view active" id="view-today">
+    <div class="card phasehero">
+      <svg class="blueprint" viewBox="0 0 100 100"><g stroke="#fff" fill="none" stroke-width="1"><circle cx="50" cy="42" r="26"/><circle cx="50" cy="42" r="13"/><path d="M24 42 Q50 74 76 42"/><line x1="50" y1="16" x2="50" y2="68"/><line x1="24" y1="42" x2="76" y2="42"/><circle cx="50" cy="42" r="3" fill="#fff"/></g></svg>
+      <div class="eyebrow" id="phaseEyebrow">Phase 1 of 4</div>
+      <h2 class="serif" id="phaseName">Calm &amp; Activate</h2>
+      <div class="sub" id="phaseSub">Settle the joint, restore pain-free motion, and wake up the rotator cuff.</div>
+      <div class="prog">
+        <div class="spine" id="spine"></div>
+        <div class="prog-label"><span id="progDone">0 sessions logged</span><span id="progPct">0%</span></div>
+      </div>
+    </div>
+
+    <div class="card dailyline"><p class="serif" id="dailyLine">—</p></div>
+
+    <!-- check-in -->
+    <div id="checkinArea">
+      <div class="section-h"><span class="num">1</span><h3>Today's shoulder check-in</h3></div>
+      <div class="card">
+        <div class="q">
+          <label>Right now, resting pain in the shoulder <span class="hint">— be honest, it guides everything</span></label>
+          <div class="painwrap">
+            <input type="range" id="painSlider" min="0" max="10" value="1" oninput="updatePain()">
+            <div class="painval"><span id="painNum">1</span><small id="painWord">MILD</small></div>
+          </div>
+        </div>
+        <div class="q">
+          <label>Compared to yesterday's session — how does it feel this morning?</label>
+          <div class="opts" id="q-morning">
+            <div class="opt" data-v="better">Better</div>
+            <div class="opt" data-v="same">Same</div>
+            <div class="opt" data-v="worse">Worse</div>
+          </div>
+        </div>
+        <div class="q">
+          <label>Any pain in bed last night?</label>
+          <div class="opts" id="q-night">
+            <div class="opt" data-v="no">No / slept fine</div>
+            <div class="opt" data-v="yes">Yes, it woke me</div>
+          </div>
+        </div>
+        <div class="q">
+          <label>Any new sharp catch, click, or "slipping" feeling?</label>
+          <div class="opts" id="q-sharp">
+            <div class="opt" data-v="no">None</div>
+            <div class="opt" data-v="yes">Yes, noticed it</div>
+          </div>
+        </div>
+        <div class="q" style="margin-bottom:0">
+          <label>How did you sleep?</label>
+          <div class="opts" id="q-sleep">
+            <div class="opt" data-v="good">Well</div>
+            <div class="opt" data-v="ok">Okay</div>
+            <div class="opt" data-v="poor">Poorly</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn" id="verdictBtn" disabled onclick="computeVerdict()">Get today's plan</button>
+    </div>
+
+    <!-- verdict + session (hidden until check-in) -->
+    <div id="sessionArea" style="display:none"></div>
+  </section>
+
+  <!-- ===== PROGRESS ===== -->
+  <section class="view" id="view-progress">
+    <div class="section-h" style="margin-top:4px"><h3 style="font-size:20px" class="serif">Your progress</h3></div>
+    <div class="stat-row">
+      <div class="stat"><div class="n" id="stDay">1</div><div class="l">Day</div></div>
+      <div class="stat"><div class="n" id="stSessions">0</div><div class="l">Sessions</div></div>
+      <div class="stat"><div class="n" id="stStreak">0</div><div class="l">Streak</div></div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Pain trend · last 14 check-ins</div>
+      <div class="sparkwrap" id="sparkArea"><p style="color:var(--text-faint);font-size:14px;padding:20px 0;text-align:center">Log a few check-ins to see your trend line.</p></div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:12px">The four phases</div>
+      <div class="phase-track" id="phaseTrack"></div>
+    </div>
+  </section>
+
+  <!-- ===== EXERCISES ===== -->
+  <section class="view" id="view-lib">
+    <div class="section-h" style="margin-top:4px"><h3 style="font-size:20px" class="serif">Exercise library</h3></div>
+    <p style="color:var(--text-soft);font-size:14.5px;margin:0 2px 6px">Every movement, how to do it, and the one cue that keeps it safe. Tap any exercise in your daily session to see this inline too.</p>
+    <div id="libList"></div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="view" id="view-about">
+    <div class="section-h" style="margin-top:4px"><h3 style="font-size:20px" class="serif">How this works &amp; staying safe</h3></div>
+
+    <div class="redflags">
+      <h3>⚠ Stop &amp; call your provider if you get</h3>
+      <ul>
+        <li>Sharp pain, catching, locking, or a "dead-arm" feeling</li>
+        <li>A sense the shoulder is slipping or about to dislocate</li>
+        <li>Night pain that keeps worsening over several days</li>
+        <li>New weakness, numbness, or tingling down the arm</li>
+        <li>Pain above 3/10 that hasn't settled by the next morning</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:8px">Who this program fits</div>
+      <p style="font-size:14.5px;color:var(--text-soft);line-height:1.6">This is built for a <b>chronic, conservatively-managed</b> shoulder — a suspected labral or rotator-cuff irritation being rehabbed, not a fresh injury and not a recent surgical repair still in its protected phase. It is <b>not</b> a fit for a freshly repaired labrum (those follow the surgeon's time-based protocol, which is the opposite of pushing when ready), an acute dislocation, a full cuff tear, or a fracture. Different labral tears (front, back, top) and true instability also need different precautions. If any of that describes his shoulder, have his PT adjust or replace this before he starts. When in doubt, their instruction beats the app.</p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:6px">The rules this program runs on</div>
+      <div class="principle"><span class="pi">01</span><p><b>The morning after is the verdict.</b> How the shoulder feels the next day — not during the set — decides whether you hold, progress, or back off. Same-or-better = it tolerated the load. Worse = too much.</p></div>
+      <div class="principle"><span class="pi">02</span><p><b>The 3/10 ceiling.</b> A little discomfort during rehab is fine. Pain past 3 out of 10, or pain that lingers into the next day, means dial it back.</p></div>
+      <div class="principle"><span class="pi">03</span><p><b>Gates, not the calendar.</b> The day counter is a guide. Stay at a level until it's genuinely easy and pain-free before taking the next step — even if that means repeating a week.</p></div>
+      <div class="principle"><span class="pi">04</span><p><b>Load in order.</b> Hold still first (isometrics), then move against light resistance, then heavier and slower. Pressing comes back last, through shoulder-friendly variations before any flat barbell work.</p></div>
+      <div class="principle"><span class="pi">05</span><p><b>A flare isn't failure.</b> If it flares, drop back to the last comfortable level for a few days and rebuild. Research shows people who complete rehab — even after a setback — do well.</p></div>
+      <div class="principle"><span class="pi">06</span><p><b>Rotations get their own ramp.</b> Internal and external rotation are the movements that bother this shoulder, so they start below a normal hold — at "find the angle that doesn't hurt at all" — and climb a 6-step ladder only as each step stays pain-free. They progress on their own, independent of everything else.</p></div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:10px">Why these exercises</div>
+      <p style="font-size:14.5px;color:var(--text-soft);line-height:1.6">The program is built from the conservative-rehab evidence for labral and rotator-cuff shoulders: correct the scapula and posture, restore posterior-shoulder mobility, and strengthen the rotator cuff through the ranges shown (on EMG studies) to activate it best — side-lying and scapular-plane external rotation, full-can raises, prone Y/T work — then rebuild pressing through a graded, joint-sparing ladder. It deliberately avoids the wide-grip, flared-elbow, full-depth pressing position that stresses the front of the joint.</p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:6px">Settings</div>
+      <div class="settings-row">
+        <div><div class="sl">Pause progression</div><div class="sd">Freezes your day count — for travel or a flare-up</div></div>
+        <div class="tog" id="pauseTog" onclick="togglePause()"></div>
+      </div>
+      <div class="settings-row">
+        <div><div class="sl">Reset everything</div><div class="sd">Clears all data and starts over</div></div>
+        <button class="btn-sm ghost" onclick="resetAll()">Reset</button>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <b>Not medical advice.</b> This app is an organizational tool built from published rehabilitation research and general principles. It cannot examine you, diagnose your shoulder, or account for your specific surgical history. It is not a substitute for evaluation and guidance from your surgeon or a licensed physical therapist — especially given prior surgery and a suspected labral tear, which may need imaging and hands-on assessment. Use it alongside your care team, and let their guidance override anything here.
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<!-- ============ NAV ============ -->
+<nav class="tabs">
+  <div class="wrap">
+    <button class="tab active" data-view="today" onclick="go('today')">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Today</button>
+    <button class="tab" data-view="progress" onclick="go('progress')">
+      <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>Progress</button>
+    <button class="tab" data-view="lib" onclick="go('lib')">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Exercises</button>
+    <button class="tab" data-view="about" onclick="go('about')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>Guide</button>
+  </div>
+</nav>
+
+<script>
+/* ============================================================
+   DATA — evidence-based 90-day gate-based shoulder rebuild
+   ============================================================ */
+
+const LIBRARY = {
+  pendulum:{name:"Pendulum swings",tag:"Warm-up · decompression",cues:["Lean forward, let the arm hang like a rope from the shoulder.","Shift your <b>hips</b> to swing the arm in small circles — the arm stays totally relaxed.","30 sec each direction. This gently opens the joint space before you load it."],safe:"The arm should feel heavy and loose. No muscling it around."},
+  scapset:{name:"Scapular setting",tag:"Activation · posture",cues:["Sit or stand tall. Gently draw both shoulder blades <b>down and back</b> — think 'slide them into your back pockets.'","Hold 5 sec, relax. This is the foundation position for every other exercise.","Not a hard squeeze — about 30% effort."],safe:"If you only fix one thing, fix this. A set scapula protects the joint in everything else."},
+  isoER:{name:"Isometric external rotation",tag:"Rotator cuff · hold",cues:["Stand next to a wall or doorframe, elbow bent 90° and tucked to your side, a rolled towel between elbow and ribs.","Press the back of your wrist <b>outward</b> into the wall — but don't let it move. Pure hold.","Build from gentle to moderate over the hold. 5 holds × 30–45 sec."],safe:"No movement, no pain past 3/10. This is the safest way to load a cranky cuff."},
+  isoIR:{name:"Isometric internal rotation",tag:"Rotator cuff · hold",cues:["Same setup, elbow tucked at 90°. Now press your <b>palm</b> into the wall/doorframe, inward.","Hold without moving. 5 × 30–45 sec, gentle to moderate."],safe:"Keep the elbow pinned to your side the whole time."},
+  isoAbd:{name:"Isometric abduction",tag:"Deltoid/cuff · hold",cues:["Stand with the outside of your upper arm near a wall, elbow at your side.","Press your arm <b>out into the wall</b> as if lifting it sideways — but it stays still. Hold 30 sec × 5."],safe:"Arm stays at your side. This trains lift-off strength without the painful range."},
+  isoFlex:{name:"Isometric front hold",tag:"Front delt/cuff · hold",cues:["Make a fist, place the back of your fist against a wall in front of you, elbow slightly bent.","Press <b>forward</b> into the wall gently, hold 30 sec × 5."],safe:"Keep it well below shoulder height early on."},
+  crossbody:{name:"Cross-body stretch",tag:"Mobility · posterior capsule",cues:["Bring the sore arm across your chest. With the other hand, gently pull it closer <b>at the elbow.</b>","Keep the shoulder blade pinned back (do it against a wall for better isolation). Hold 30 sec × 3.","You should feel a stretch in the <b>back</b> of the shoulder, never the front."],safe:"Gentle. If you feel pinching in the front of the joint, ease off — that's not the target."},
+  bandrow:{name:"Band row (scapular)",tag:"Scapular strength",cues:["Anchor a light band at chest height. Pull your elbows back, leading with the <b>shoulder blades</b> squeezing together.","Elbows stay close to the ribs. Slow return. 2–3 × 12–15."],safe:"Drive from the mid-back, not the arms. No shrugging."},
+  serratus:{name:"Wall slides / serratus punch",tag:"Scapular stability",cues:["Forearms on a wall in a 'W'. Slide them up while pushing gently into the wall, then 'punch' the wall at the top to round the upper back slightly.","Feel the muscle under your armpit/shoulder-blade working. 2 × 10.","Or: standing band punch straight ahead, reaching the shoulder blade forward at the end."],safe:"Stay pain-free in range. Lower the top height if it pinches."},
+  sidelieER:{name:"Side-lying external rotation",tag:"Rotator cuff · strength",cues:["Lie on your good side, sore arm on top, elbow bent 90° and pinned to your ribs, light dumbbell in hand.","Rotate the forearm <b>up</b> toward the ceiling, keeping the elbow glued to your side. Lower slow.","Start with 1–3 lb. 3 × 12. This is the single best infraspinatus builder."],safe:"Tiny weight, strict form. The elbow must not drift off the ribs."},
+  bandER:{name:"Standing band external rotation",tag:"Rotator cuff · strength",cues:["Band anchored at elbow height, elbow tucked with a towel roll. Rotate the forearm <b>outward</b> against the band, slow return.","Progress by stepping the setup into the scapular plane (arm 30–45° out from the body). 3 × 12–15."],safe:"Controlled tempo. Keep the shoulder blade set the whole time."},
+  fullcan:{name:"Full-can raise",tag:"Supraspinatus · strength",cues:["Thumbs <b>up</b> (like holding a full can). Raise the arms in the scapular plane — about 30–45° forward of straight-out to the side — to shoulder height, no higher.","Light weight or no weight to start. 3 × 12.","<b>Thumbs up, never thumbs down.</b> Thumb-down ('empty can') pinches the tendon."],safe:"Only rise as high as stays pain-free. Height is earned over weeks."},
+  proneY:{name:"Prone Y raise",tag:"Lower trap · posterior",cues:["Lie face-down (or on an incline bench). Arms out overhead in a 'Y', thumbs up.","Lift them a few inches off the floor by squeezing the lower shoulder blades, hold 2 sec, lower slow. 2–3 × 10.","Light or no weight — this is about control, not load."],safe:"Lead with the shoulder blade, not the hand. Small range is fine."},
+  proneT:{name:"Prone T raise",tag:"Mid-back · posterior cuff",cues:["Face-down, arms straight out to the sides in a 'T', thumbs up.","Lift by pinching the shoulder blades together, hold 2 sec, lower slow. 2–3 × 12."],safe:"Keep the neck relaxed and long; don't hike the shoulders to the ears."},
+  facepull:{name:"Face pull",tag:"Posterior cuff · scapula",cues:["Band at face height. Pull toward your forehead, hands separating, elbows high and wide.","Finish with the shoulder blades squeezed and the knuckles by your ears. Slow return. 3 × 15."],safe:"High volume, light load. Great daily posture fixer."},
+  bandIR:{name:"Band internal rotation",tag:"Subscapularis · strength",cues:["Band anchored at elbow height on the sore side. Elbow tucked, rotate the forearm <b>in</b> toward your belly against the band. Slow return. 3 × 12."],safe:"Balance for the front of the cuff. Keep it gentle early."},
+  pushupplus:{name:"Push-up plus (wall/incline)",tag:"Serratus · closed chain",cues:["Hands on a wall (or later a countertop). Do a small push-up, then at the top <b>push a little further</b>, rounding the upper back and spreading the shoulder blades apart.","That last 'plus' is the whole point. 2 × 10.","Lower the difficulty by standing more upright."],safe:"Keep it well within comfort. Progress to lower surfaces over weeks."},
+  rhythmic:{name:"Rhythmic stabilization",tag:"Neuromuscular control",cues:["Arm out in front holding a light dumbbell, or hand pressing into a wall. Have someone give tiny nudges from different directions — or self-generate small perturbations — while you <b>hold the position steady.</b>","20–30 sec × 3. Trains the cuff to react and protect the joint."],safe:"Small, controlled perturbations only. No big or fast movements."},
+  isoPress:{name:"Isometric press",tag:"Press re-entry · hold",cues:["Lie on the floor or stand facing a wall. Press your hands/dumbbells into an immovable point (the floor at the bottom, or the wall) as if pressing — but nothing moves. Hold 20–30 sec × 4.","This is step one of getting pressing back: load the pattern with zero movement."],safe:"The gateway press. If even this provokes pain, you're not ready — stay on cuff work."},
+  landmine:{name:"Landmine press (single arm)",tag:"Press re-entry · strength",cues:["One end of a barbell in a corner or landmine. Press the other end <b>up and slightly forward</b> at a diagonal, one arm.","The diagonal path is the most shoulder-friendly way back to pressing. Light. 3 × 10.","Keep the shoulder blade set; don't let it shrug up."],safe:"This is the re-entry press for a reason — the joint stays in a safe plane. Start light."},
+  floorpress:{name:"Floor press (neutral grip)",tag:"Press · protected range",cues:["Lie on the floor, dumbbells with palms <b>facing each other</b> (neutral grip). Press up; on the way down the elbows stop when they touch the floor.","The floor blocks the painful bottom range. Elbows tucked ~45°, not flared. 3 × 8–10."],safe:"Neutral grip + limited depth = protected. Never let elbows flare wide."},
+  neutralDB:{name:"Neutral-grip DB bench press",tag:"Press · controlled ROM",cues:["On a bench, palms facing each other, elbows tucked around 45° from the body. Lower only as far as stays pain-free — <b>you decide the depth.</b> 3 × 8–10.","Set the shoulder blades down and back before every rep."],safe:"If any depth pinches or feels unstable, stop short of it. Depth is earned."},
+  inclineCG:{name:"Incline close-grip press",tag:"Press · progression",cues:["Incline bench, narrow/neutral grip, elbows tucked. The incline reduces how far the shoulder extends behind the body. 3 × 8.","A joint-friendlier way to add pressing load and range."],safe:"Keep the grip narrow and elbows in. Widen nothing."},
+  spoto:{name:"Paused press",tag:"Press · late stage",cues:["Any tolerated press, but <b>pause an inch above the chest</b> without touching, then press. Removes the hardest bottom position while building control. 3 × 5.","A late-stage tool before considering any standard-grip barbell work."],safe:"Only once neutral-grip pressing is fully comfortable. When in doubt, stay neutral-grip — many people do, permanently, and thrive."},
+  hsrER:{name:"Heavy-slow external rotation",tag:"Rotator cuff · loading",cues:["Side-lying or band ER, but with a <b>3-second lower</b> and a controlled lift, at a load that's challenging by the last couple reps. 3 × 8.","Slow tempo under moderate load is what builds real tendon capacity."],safe:"Heavier than early cuff work, but still strict. Morning-after check governs the load."},
+  rowHeavy:{name:"Neutral-grip row",tag:"Back/scapula · strength",cues:["Neutral (palms-in) grip, dumbbell or cable row. Lead with the shoulder blade, pull the elbow back and down. 3 × 10.","Builds the pulling strength that balances all pressing."],safe:"Keep it pain-free; neutral grip keeps the shoulder happy."},
+  carry:{name:"Farmer's carry",tag:"Stability · integration",cues:["Hold a moderate weight in each hand, shoulders set down and back, and walk 30–40 sec, tall and braced.","Trains the shoulder to stay stable under load through real movement. 3 rounds."],safe:"Set the shoulder blades before you pick up. Stop if the shoulder feels like it's dropping."},
+  proneHorizER:{name:"Prone horizontal abduction",tag:"Posterior cuff · strength",cues:["Face-down, arm hanging, thumb up. Raise it out to the side to shoulder level, squeezing the back of the shoulder. Slow lower. 3 × 12.","One of the highest-activation posterior-cuff builders."],safe:"Light load, thumb up, stop at shoulder height."},
+  thoracic:{name:"Thoracic extension",tag:"Mobility · posture",cues:["Sit in a chair, hands behind your head, gently arch the <b>upper back</b> over the chair's edge. A few slow reps.","A mobile upper back takes pressure off the shoulder."],safe:"Move the mid-back, not the low back. Gentle and slow."},
+};
+
+const LIB_ORDER = [
+  {cat:"Warm-up & mobility",ids:["pendulum","scapset","thoracic","crossbody"]},
+  {cat:"Rotator cuff",ids:["isoER","isoIR","isoAbd","isoFlex","sidelieER","bandER","fullcan","bandIR","hsrER","proneHorizER","rhythmic"]},
+  {cat:"Scapula & posterior chain",ids:["bandrow","serratus","proneY","proneT","facepull","pushupplus","rowHeavy","carry"]},
+  {cat:"Pressing (returns last)",ids:["isoPress","landmine","floorpress","neutralDB","inclineCG","spoto"]},
+];
+
+const PHASES = [
+  {id:1,name:"Calm & Activate",sub:"Settle the joint, restore pain-free motion, and wake up the rotator cuff.",start:1,end:21,color:"#6d8f86",
+   blocks:[
+     {label:"Prepare",ids:["pendulum","scapset","thoracic"]},
+     {label:"Rotation on-ramp — the part to nurse back",rot:true},
+     {label:"Other gentle holds",ids:["isoAbd","isoFlex"]},
+     {label:"Wake the scapula",ids:["bandrow","serratus"]},
+     {label:"Finish",ids:["crossbody"]},
+   ]},
+  {id:2,name:"Build",sub:"Move from holds to light resistance through range. Strength returns; pressing waits.",start:22,end:45,color:"#c09a5a",
+   blocks:[
+     {label:"Prepare",ids:["pendulum","scapset"]},
+     {label:"Rotation on-ramp — keep climbing when pain-free",rot:true},
+     {label:"Cuff & posterior — light & strict",ids:["fullcan","proneY","proneT","facepull","pushupplus"]},
+     {label:"Control & mobility",ids:["rhythmic","crossbody"]},
+   ]},
+  {id:3,name:"Load",sub:"Build real strength and carefully reintroduce pressing — one friendly variation at a time.",start:46,end:70,color:"#a86f37",
+   blocks:[
+     {label:"Prepare",ids:["scapset","fullcan"]},
+     {label:"Rotation on-ramp — now loaded",rot:true},
+     {label:"Press — re-entry ladder",press:true},
+     {label:"Pull & stabilize",ids:["rowHeavy","facepull","carry","proneHorizER"]},
+   ]},
+  {id:4,name:"Restore & Resilience",sub:"Consolidate strength, expand pressing as tolerated, and build your keep-it-forever routine.",start:71,end:90,color:"#83531f",
+   blocks:[
+     {label:"Prepare",ids:["scapset","thoracic"]},
+     {label:"Rotation — full strength",rot:true},
+     {label:"Press — expand as tolerated",press:true},
+     {label:"Strength maintenance",ids:["rowHeavy","proneHorizER"]},
+     {label:"Integrate & stabilize",ids:["carry","rhythmic","crossbody"]},
+   ]},
+];
+
+// press ladder — index gated by phase
+const PRESS_LADDER = ["isoPress","landmine","floorpress","neutralDB","inclineCG","spoto"];
+const PRESS_CAP = {3:3, 4:5}; // phase 3 caps at neutral DB; phase 4 opens the rest
+
+// ROTATION ON-RAMP — a gentle, separately-tracked ladder for the movements that hurt him.
+// Climb only when a step is fully pain-free during AND the next morning.
+const ER_STEPS = [
+  {name:"External rotation — find the pain-free hold",dose:"5 × 15–20 sec · very gentle",
+   cues:["Elbow tucked to your side, forearm pointing forward, a rolled towel between elbow and ribs.","Press the <b>back of your wrist</b> gently outward into a wall or firm pillow — only <b>20–30% effort</b> — at the one angle that feels completely pain-free.","No movement at all. The only job today is to find that pain-free angle and rest there."],
+   safe:"Zero pain is the target, not a little pain. If even a light hold hurts at every angle, stop here and check with your PT before going further — don't push into it."},
+  {name:"External rotation — build the hold",dose:"5 × 30 sec · gentle→firm",
+   cues:["Same tucked position. Now build the press from gentle to moderate to firm across each hold — still <b>no movement.</b>","Try a slightly wider spread of angles, keeping every one pain-free."],
+   safe:"Firm is not the same as painful. Back off the instant it pinches."},
+  {name:"External rotation — small-arc active",dose:"2–3 × 12 · slow, no load",
+   cues:["No band, no weight. Elbow tucked, slowly rotate the forearm <b>outward through the middle, comfortable arc only</b>, then back.","Stay well away from the end-range where it usually bites."],
+   safe:"Own the pain-free middle before chasing more range. Small and smooth wins."},
+  {name:"External rotation — light band, partial range",dose:"3 × 12 · lightest band",
+   cues:["Lightest band you have, elbow tucked with the towel roll. Rotate out through your <b>pain-free arc only</b>, slow return.","End each rep <b>before</b> any discomfort — not into it."],
+   safe:"Lightest resistance available. Expand the range week to week, never within a set."},
+  {name:"External rotation — light load, fuller range",dose:"3 × 12 · 1–3 lb",
+   cues:["Lie on your good side, tiny dumbbell (1–3 lb), elbow pinned to your ribs, rotate up toward the ceiling through as much range as stays comfortable.","Slow lower every rep."],
+   safe:"Elbow glued to your side. If a spot still stings, work up to it over sessions, not through it."},
+  {name:"External rotation — loaded, full range",dose:"3 × 8–12 · controlled",
+   cues:["Full-range side-lying or scapular-plane band external rotation. In later phases, add a <b>3-second lower</b> under a challenging but strict load.","This is the destination — normal, loaded rotation, pain-free."],
+   safe:"The morning-after response sets the load from here. Strict form always."},
+];
+const IR_STEPS = [
+  {name:"Internal rotation — find the pain-free hold",dose:"5 × 15–20 sec · very gentle",
+   cues:["Elbow tucked, forearm forward. Press your <b>palm</b> gently inward toward your belly, into a wall or doorframe — <b>20–30% effort</b> — at the angle that's completely pain-free.","No movement. Find the comfortable angle and settle there."],
+   safe:"Aim for zero pain. If every angle hurts, stop and check with your PT rather than forcing it."},
+  {name:"Internal rotation — build the hold",dose:"5 × 30 sec · gentle→firm",
+   cues:["Same position, build gentle to firm across the hold, still perfectly static.","Explore nearby angles, keeping each one pain-free."],
+   safe:"Firm, never painful. Ease off if it catches."},
+  {name:"Internal rotation — small-arc active",dose:"2–3 × 12 · slow, no load",
+   cues:["No resistance. Rotate the forearm <b>inward through the comfortable middle arc only</b>, slow and controlled."],
+   safe:"Keep the arc small and smooth. Reaching the hand up your back can be limited by tightness — the cross-body stretch helps that over time."},
+  {name:"Internal rotation — light band, partial range",dose:"3 × 12 · lightest band",
+   cues:["Lightest band anchored at elbow height, elbow tucked. Rotate in through your <b>pain-free range only</b>, slow return."],
+   safe:"Stop each rep before discomfort. Add range across weeks, not within a set."},
+  {name:"Internal rotation — light load, fuller range",dose:"3 × 12",
+   cues:["Continue with a light band through more range, or side-lying on the <b>sore</b> side with a small pillow under the arm and a tiny dumbbell, rotating up.","Support the arm and keep it strict."],
+   safe:"If a range still stings, build toward it gradually."},
+  {name:"Internal rotation — loaded, full range",dose:"3 × 8–12 · controlled",
+   cues:["Band or dumbbell internal rotation through full pain-free range; add slow tempo in later phases.","The destination — normal loaded rotation without pain."],
+   safe:"Let the next morning judge the load."},
+];
+const ROT_CAP = {1:2, 2:4, 3:5, 4:5}; // how far up the ramp each phase allows
+
+const LINES = [
+  "Tissue heals on its own clock. Your job is simply to give it a reason to get stronger — today.",
+  "The shoulder you're rebuilding remembers every honest, unhurried rep.",
+  "Pain is information, not the enemy. Listen to it, adjust, and keep going.",
+  "Slow is smooth, and smooth is what gets strong.",
+  "You don't have to train hard today. You have to train right.",
+  "Consistency beats intensity in a rebuild — every single time.",
+  "Skipping ahead is how people end up starting over. Earn the next step.",
+  "A calm shoulder tomorrow morning is worth more than a heavy set tonight.",
+  "Rebuilding isn't glamorous. It's just showing up, one careful day at a time.",
+  "The joint gets a vote. Today, let it lead.",
+  "Small, steady loads are how tendons quietly become resilient.",
+  "You're not behind. You're exactly as far along as your shoulder has earned.",
+  "Trust the boring reps. They're doing the real work.",
+  "Strength built patiently tends to stay.",
+  "A good rehab day feels almost too easy. That's the point.",
+  "Protect the range you can't control yet; own the range you can.",
+  "The best in the business rehab slowly. So can you.",
+  "Every day you don't flare it is a day it gets to heal.",
+  "Progress you can feel next week beats progress you can feel mid-set.",
+  "Set the shoulder blade first. Everything good follows from there.",
+  "Backing off isn't quitting — it's how the smart ones finish.",
+  "Your future overhead-reaching, pain-free self is being built right now.",
+  "Respect the tendon's timeline and it will surprise you.",
+  "One good check-in, one honest session. That's the whole game today.",
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const KEY = "rebuild_v1";
+let S = null;
+const todayISO = ()=> new Date().toISOString().slice(0,10);
+
+function load(){
+  let raw=null;
+  try{ raw = localStorage.getItem(KEY); }catch(e){ raw=null; }
+  if(raw){ try{ S = JSON.parse(raw); }catch(e){ S=null; } }
+  if(S){
+    // backfill any fields added in later versions so older saves never break
+    S.erTier    = Number.isInteger(S.erTier)    ? S.erTier    : 0;
+    S.irTier    = Number.isInteger(S.irTier)    ? S.irTier    : 0;
+    S.pressTier = Number.isInteger(S.pressTier) ? S.pressTier : 0;
+    S.dayIndex  = Number.isInteger(S.dayIndex)  ? S.dayIndex  : 1;
+    S.paused    = !!S.paused;
+    S.logs      = S.logs && typeof S.logs==='object' ? S.logs : {};
+    S.checkins  = Array.isArray(S.checkins) ? S.checkins : [];
+    if(!S.startDate) S.startDate = todayISO();
+    if(!S.lastOpen)  S.lastOpen  = todayISO();
+  }
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){/* storage unavailable — continue in-memory */} }
+
+function freshState(startDate){
+  return {
+    started:true,
+    startDate,
+    dayIndex:1,
+    lastOpen:todayISO(),
+    paused:false,
+    pressTier:0,
+    erTier:0,
+    irTier:0,
+    logs:{},          // date -> {pain, morning, done:true}
+    sessionDoneDate:null,
+    checkins:[],      // {date, pain}
+  };
+}
+
+/* advance dayIndex by real calendar days elapsed (unless paused) */
+function syncDays(){
+  const last = new Date(S.lastOpen+"T00:00:00");
+  const now = new Date(todayISO()+"T00:00:00");
+  let diff = Math.round((now-last)/86400000);
+  if(diff<0) diff=0;
+  if(!S.paused && diff>0){
+    S.dayIndex = Math.min(90, S.dayIndex + diff);
+  }
+  S.lastOpen = todayISO();
+  save();
+}
+
+function currentPhase(){
+  const d=S.dayIndex;
+  for(const p of PHASES){ if(d>=p.start && d<=p.end) return p; }
+  return PHASES[PHASES.length-1];
+}
+
+/* ============================================================
+   ONBOARDING
+   ============================================================ */
+function toggleAck(id){
+  const el=document.getElementById(id);
+  el.classList.toggle('on');
+  const ok = document.getElementById('ack1').classList.contains('on') &&
+             document.getElementById('ack2').classList.contains('on') &&
+             document.getElementById('startDate').value;
+  document.getElementById('beginBtn').disabled=!ok;
+}
+document.getElementById('startDate').addEventListener('change',()=>{
+  const ok = document.getElementById('ack1').classList.contains('on') &&
+             document.getElementById('ack2').classList.contains('on') &&
+             document.getElementById('startDate').value;
+  document.getElementById('beginBtn').disabled=!ok;
+});
+function beginProgram(){
+  const sd=document.getElementById('startDate').value || todayISO();
+  S=freshState(sd);
+  save();
+  document.getElementById('gate').classList.remove('show');
+  render();
+}
+
+/* ============================================================
+   CHECK-IN + VERDICT
+   ============================================================ */
+const checkinState={morning:null,night:null,sharp:null,sleep:null,pain:1};
+
+document.querySelectorAll('.opts').forEach(group=>{
+  group.querySelectorAll('.opt').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      group.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      opt.classList.add('sel');
+      const key=group.id.replace('q-','');
+      checkinState[key]=opt.dataset.v;
+      maybeEnableVerdict();
+    });
+  });
+});
+function updatePain(){
+  const v=+document.getElementById('painSlider').value;
+  checkinState.pain=v;
+  document.getElementById('painNum').textContent=v;
+  const w = v===0?"NONE": v<=2?"MILD": v<=4?"MODERATE": v<=6?"HIGH":"SEVERE";
+  document.getElementById('painWord').textContent=w;
+}
+function maybeEnableVerdict(){
+  const c=checkinState;
+  const ready = c.morning && c.night && c.sharp && c.sleep;
+  document.getElementById('verdictBtn').disabled=!ready;
+}
+
+function computeVerdict(){
+  const c=checkinState;
+  let v; // 'stop' | 'steady' | 'go'
+  if(c.sharp==='yes' || c.night==='yes' || c.pain>=4 || c.morning==='worse'){
+    v='stop';
+  } else if(c.pain<=1 && c.morning==='better' && c.sleep!=='poor'){
+    v='go';
+  } else {
+    v='steady';
+  }
+  // persist check-in
+  const d=todayISO();
+  S.logs[d]={pain:c.pain, morning:c.morning, verdict:v};
+  if(!S.checkins.find(x=>x.date===d)){
+    S.checkins.push({date:d,pain:c.pain});
+    if(S.checkins.length>60) S.checkins.shift();
+  } else {
+    S.checkins=S.checkins.map(x=>x.date===d?{date:d,pain:c.pain}:x);
+  }
+  save();
+  renderSession(v);
+  document.getElementById('checkinArea').style.display='none';
+  document.getElementById('sessionArea').style.display='block';
+  document.getElementById('sessionArea').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ============================================================
+   RENDER SESSION
+   ============================================================ */
+const VERDICT_COPY={
+  go:{badge:"BUILD",title:"Green light — build today.",cls:"v-go",
+      text:"The shoulder is quiet and recovered well. Do the full session, and if a level has felt easy and pain-free lately, this is the day to take the next step up."},
+  steady:{badge:"STEADY",title:"Steady — hold your ground.",cls:"v-steady",
+      text:"A little symptomatic, but fine to train. Do the full session at your <b>current</b> level — same loads as last time. Don't add anything today; let it settle."},
+  stop:{badge:"BACK OFF",title:"Back off — recover today.",cls:"v-stop",
+      text:"The shoulder is telling you it needs a lighter day. Do only the gentle settle-down work below — no pressing, no progression. If this keeps up for several days, or any red-flag sign appears, contact your PT."},
+};
+
+function cardHTML(domId, name, dose, cues, safe){
+  const cueHtml = cues.map(c=>`<div class="cue">• ${c}</div>`).join('');
+  return `<div class="ex" id="ex-${domId}">
+    <div class="ex-main" onclick="toggleEx('${domId}',event)">
+      <div class="check" onclick="markEx('${domId}',event)"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></div>
+      <div class="ex-body">
+        <div class="ex-name">${name}</div>
+        <div class="ex-dose">${dose}</div>
+        <div class="ex-toggle">How to do it<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+    </div>
+    <div class="ex-detail"><div class="ex-detail-inner">${cueHtml}<div class="ex-safe"><b>Keep it safe:</b> ${safe}</div></div></div>
+  </div>`;
+}
+
+function exHTML(id, doseOverride){
+  const ex=LIBRARY[id];
+  return cardHTML(id, ex.name, doseOverride||defaultDose(id), ex.cues, ex.safe);
+}
+
+function rotHTML(kind, phaseId, verdict){
+  const steps = kind==='er' ? ER_STEPS : IR_STEPS;
+  const cap = ROT_CAP[phaseId] ?? 5;
+  const ref = kind==='er' ? 'erTier' : 'irTier';
+  const tier = Math.min(Number.isInteger(S[ref]) ? S[ref] : 0, cap);
+  const step = steps[tier];
+  let html = cardHTML('rot-'+kind, step.name, `Step ${tier+1}/6 · ${step.dose}`, step.cues, step.safe);
+  if(verdict==='go' && tier < cap){
+    const nextShort = steps[tier+1].name.split('—')[1].trim();
+    html += `<div class="advance">
+      <h4>◆ Ready to progress ${kind==='er'?'external':'internal'} rotation?</h4>
+      <p>Move up only when this step has been <b>fully pain-free</b> — during the set and the next morning — for a few sessions. There's no prize for rushing.</p>
+      <button class="btn-sm bronze" onclick="advanceRot('${kind}',${cap})">Step up to: ${nextShort}</button>
+    </div>`;
+  } else if(tier===cap && cap<5){
+    html += `<div class="advance"><h4>◆ Phase ceiling reached</h4><p>You've climbed as far as this phase allows — good. The next steps open up in the following phase, once the base is solid.</p></div>`;
+  }
+  return html;
+}
+
+function advanceRot(kind, cap){
+  const ref = kind==='er' ? 'erTier' : 'irTier';
+  S[ref] = Math.min(cap, S[ref]+1);
+  save();
+  const v = S.logs[todayISO()]?.verdict || 'go';
+  renderSession(v);
+  toast((kind==='er'?'External':'Internal')+' rotation stepped up — start gentle.');
+}
+
+function defaultDose(id){
+  const map={
+    pendulum:"30 sec each way",scapset:"5 sec × 8",thoracic:"8 slow reps",crossbody:"30 sec × 3",
+    isoER:"5 holds × 30–45 sec",isoIR:"5 × 30–45 sec",isoAbd:"5 × 30 sec",isoFlex:"5 × 30 sec",
+    bandrow:"3 × 15",serratus:"2 × 10",
+    sidelieER:"3 × 12 · light",bandER:"3 × 12–15",fullcan:"3 × 12 · to pain-free height",bandIR:"3 × 12",
+    proneY:"3 × 10",proneT:"3 × 12",facepull:"3 × 15",pushupplus:"2 × 10",rhythmic:"3 × 20–30 sec",
+    hsrER:"3 × 8 · 3-sec lower",proneHorizER:"3 × 12",rowHeavy:"3 × 10",carry:"3 × 30–40 sec",
+    isoPress:"4 × 20–30 sec",landmine:"3 × 10 · light",floorpress:"3 × 8–10",neutralDB:"3 × 8–10",
+    inclineCG:"3 × 8",spoto:"3 × 5",
+  };
+  return map[id]||"";
+}
+
+function pressBlockHTML(phaseId, verdict){
+  const cap = PRESS_CAP[phaseId] ?? 3;
+  const tier = Math.min(Number.isInteger(S.pressTier) ? S.pressTier : 0, cap);
+  const id = PRESS_LADDER[tier];
+  let html = exHTML(id);
+  // advance option — only on a green-light day
+  if(verdict==='go' && tier < cap){
+    const nextName = LIBRARY[PRESS_LADDER[tier+1]].name;
+    html += `<div class="advance">
+      <h4>◆ Ready for the next press?</h4>
+      <p>You're on <b>${LIBRARY[id].name}</b>. Only step up when this has felt easy and completely pain-free — during and the morning after — for at least a few sessions.</p>
+      <button class="btn-sm bronze" onclick="advancePress(${cap})">Step up to ${nextName}</button>
+    </div>`;
+  } else if(tier===cap && phaseId===4 && tier===PRESS_LADDER.length-1){
+    html += `<div class="advance"><h4>◆ Top of the ladder</h4><p>You've worked all the way up. Many people stay on neutral-grip / paused pressing for good and never look back — if that's you, that's a win, not a limitation. Any move to a standard flat barbell should be cleared with your PT first.</p></div>`;
+  }
+  return html;
+}
+
+function advancePress(cap){
+  S.pressTier = Math.min(cap, S.pressTier+1);
+  save();
+  const v = S.logs[todayISO()]?.verdict || 'go';
+  renderSession(v);
+  toast("Press level increased — start light.");
+}
+
+function renderSession(v){
+  computeVerdict.__last=v;
+  const p=currentPhase();
+  const vc=VERDICT_COPY[v];
+  let html=`<div class="verdict ${vc.cls}">
+     <div class="vhead"><span class="badge">${vc.badge}</span></div>
+     <h3 class="serif">${vc.title}</h3>
+     <p>${vc.text}</p>
+   </div>`;
+
+  const alreadyDone = S.logs[todayISO()]?.done;
+
+  if(v==='stop'){
+    html+=`<div class="block-label">Settle-down session</div>`;
+    html+=exHTML("pendulum",softDose("pendulum"));
+    html+=exHTML("scapset",softDose("scapset"));
+    html+=`<div class="block-label">Gentlest rotation only</div>`;
+    html+=cardHTML('rot-er', ER_STEPS[0].name, "very gentle · "+ER_STEPS[0].dose, ER_STEPS[0].cues, ER_STEPS[0].safe);
+    html+=cardHTML('rot-ir', IR_STEPS[0].name, "very gentle · "+IR_STEPS[0].dose, IR_STEPS[0].cues, IR_STEPS[0].safe);
+    html+=`<div class="block-label">Ease off</div>`;
+    html+=exHTML("crossbody",softDose("crossbody"));
+    html+=exHTML("thoracic",softDose("thoracic"));
+  } else {
+    p.blocks.forEach(b=>{
+      html+=`<div class="block-label">${b.label}</div>`;
+      if(b.press){
+        html+=pressBlockHTML(p.id, v);
+      } else if(b.rot){
+        html+=`<p style="font-size:13.5px;color:var(--text-soft);margin:-2px 4px 10px;line-height:1.5">These are the movements that bother him — so they get their own gentle ramp. Do the step shown; live at a level until it's genuinely pain-free before climbing.</p>`;
+        html+=rotHTML('er',p.id,v);
+        html+=rotHTML('ir',p.id,v);
+      } else {
+        b.ids.forEach(id=>{
+          html+=exHTML(id,defaultDose(id));
+        });
+      }
+    });
+  }
+
+  html+=`<div style="margin-top:20px" id="completeWrap"></div>`;
+  document.getElementById('sessionArea').innerHTML=html;
+  renderCompleteButton(alreadyDone);
+}
+
+function softDose(id){
+  const s={pendulum:"30 sec each way",scapset:"gentle, 5 × 6",isoER:"gentle only, 3 × 20 sec",crossbody:"very gentle, 30 sec × 2",thoracic:"6 easy reps"};
+  return s[id]||defaultDose(id);
+}
+
+function renderCompleteButton(done){
+  const wrap=document.getElementById('completeWrap');
+  if(!wrap) return;
+  if(done){
+    wrap.innerHTML=`<div class="doneBanner">
+      <div class="ring"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></div>
+      <h3 class="serif">Session logged.</h3>
+      <p>That's the rebuild — one honest day at a time. Rest well; the shoulder does its repairing while you sleep.</p>
+    </div>`;
+  } else {
+    wrap.innerHTML=`<button class="btn bronze" onclick="completeSession()">Log today's session ✓</button>`;
+  }
+}
+
+function toggleEx(id,e){
+  if(e.target.closest('.check')) return;
+  document.getElementById('ex-'+id).classList.toggle('open');
+}
+function markEx(id,e){
+  e.stopPropagation();
+  document.getElementById('ex-'+id).classList.toggle('done');
+}
+function completeSession(){
+  const d=todayISO();
+  S.logs[d]=Object.assign({},S.logs[d],{done:true});
+  save();
+  renderCompleteButton(true);
+  render();
+  toast("Logged. Well done.");
+  document.getElementById('sessionArea').scrollIntoView({behavior:'smooth',block:'end'});
+}
+
+/* ============================================================
+   RENDER APP CHROME
+   ============================================================ */
+function render(){
+  if(!S||!S.started){ document.getElementById('gate').classList.add('show'); document.getElementById('startDate').value=todayISO(); return; }
+  syncDays();
+  const p=currentPhase();
+
+  document.getElementById('daychip').textContent=`Day ${S.dayIndex} / 90`;
+  document.getElementById('phaseEyebrow').textContent=`Phase ${p.id} of 4`;
+  document.getElementById('phaseName').textContent=p.name;
+  document.getElementById('phaseSub').textContent=p.sub;
+
+  // daily line
+  document.getElementById('dailyLine').textContent=LINES[(S.dayIndex-1)%LINES.length];
+
+  // spine (90 ticks)
+  const doneDates=Object.keys(S.logs).filter(d=>S.logs[d].done).length;
+  let spine='';
+  for(let i=1;i<=90;i++){
+    let cls='';
+    if(i<S.dayIndex) cls='done';
+    else if(i===S.dayIndex) cls='today';
+    spine+=`<i class="${cls}"></i>`;
+  }
+  document.getElementById('spine').innerHTML=spine;
+  document.getElementById('progDone').textContent=`${doneDates} session${doneDates===1?'':'s'} logged`;
+  document.getElementById('progPct').textContent=Math.round((S.dayIndex/90)*100)+'%';
+
+  // check-in reset if new day
+  const d=todayISO();
+  if(S.logs[d] && (S.logs[d].verdict)){
+    // already checked in today -> show session directly
+    document.getElementById('checkinArea').style.display='none';
+    document.getElementById('sessionArea').style.display='block';
+    // restore slider/pain display
+    renderSession(S.logs[d].verdict);
+  } else {
+    document.getElementById('checkinArea').style.display='block';
+    document.getElementById('sessionArea').style.display='none';
+  }
+
+  renderProgress();
+  document.getElementById('pauseTog').classList.toggle('on',S.paused);
+}
+
+function renderProgress(){
+  document.getElementById('stDay').textContent=S.dayIndex;
+  const done=Object.keys(S.logs).filter(x=>S.logs[x].done).length;
+  document.getElementById('stSessions').textContent=done;
+  // streak
+  let streak=0; let cur=new Date(todayISO()+"T00:00:00");
+  for(let i=0;i<90;i++){
+    const ds=cur.toISOString().slice(0,10);
+    if(S.logs[ds]&&S.logs[ds].done){streak++;cur.setDate(cur.getDate()-1);}
+    else if(ds===todayISO()){cur.setDate(cur.getDate()-1);} // today not yet done doesn't break
+    else break;
+  }
+  document.getElementById('stStreak').textContent=streak;
+
+  // sparkline
+  const pts=S.checkins.slice(-14);
+  const area=document.getElementById('sparkArea');
+  if(pts.length<2){ area.innerHTML=`<p style="color:var(--text-faint);font-size:14px;padding:20px 0;text-align:center">Log a few check-ins to see your trend line.</p>`; }
+  else{
+    const W=100,H=42,pad=4;
+    const xs=(i)=> pad + i*(W-2*pad)/(pts.length-1);
+    const ys=(v)=> pad + (v/10)*(H-2*pad);
+    let dline='', dots='';
+    pts.forEach((pt,i)=>{
+      const x=xs(i), y=ys(pt.pain);
+      dline+=(i===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';
+      dots+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.4" fill="var(--bronze)"/>`;
+    });
+    area.innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:120px">
+      <line x1="${pad}" y1="${ys(3)}" x2="${W-pad}" y2="${ys(3)}" stroke="var(--line)" stroke-width="0.4" stroke-dasharray="2 2"/>
+      <path d="${dline}" fill="none" stroke="var(--bronze)" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+      ${dots}
+    </svg>
+    <div class="spark-legend"><span>${pts[0].date.slice(5)}</span><span style="color:var(--bronze-deep)">dashed line = 3/10 ceiling</span><span>${pts[pts.length-1].date.slice(5)}</span></div>`;
+  }
+
+  // phase track
+  const p=currentPhase();
+  let track='';
+  PHASES.forEach(ph=>{
+    const cur = ph.id===p.id;
+    track+=`<div class="phase-row ${cur?'cur':''}">
+      <span class="phase-dot" style="background:${ph.color}"></span>
+      <div style="flex:1">
+        <div class="pn">Phase ${ph.id} · ${ph.name}</div>
+        <div class="pd">Days ${ph.start}–${ph.end}${cur?' · you are here':''}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('phaseTrack').innerHTML=track;
+}
+
+function renderLibrary(){
+  let html='';
+  LIB_ORDER.forEach(sec=>{
+    html+=`<div class="lib-cat">${sec.cat}</div>`;
+    sec.ids.forEach(id=>{
+      const ex=LIBRARY[id];
+      const cues=ex.cues.map(c=>`<p>• ${c}</p>`).join('');
+      html+=`<div class="lib-item">
+        <h4>${ex.name}</h4>
+        <div class="tg">${ex.tag}</div>
+        ${cues}
+        <div class="ex-safe"><b>Keep it safe:</b> ${ex.safe}</div>
+      </div>`;
+    });
+  });
+  document.getElementById('libList').innerHTML=html;
+}
+
+/* ============================================================
+   NAV / MISC
+   ============================================================ */
+function go(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===v));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function togglePause(){
+  S.paused=!S.paused; save();
+  document.getElementById('pauseTog').classList.toggle('on',S.paused);
+  toast(S.paused?"Progression paused — day count frozen.":"Progression resumed.");
+}
+function resetAll(){
+  if(confirm("Reset all progress and start the rebuild over? This can't be undone.")){
+    localStorage.removeItem(KEY); S=null;
+    location.reload();
+  }
+}
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+load();
+renderLibrary();
+try{
+  if(S&&S.started){ render(); }
+  else { document.getElementById('gate').classList.add('show'); document.getElementById('startDate').value=todayISO(); }
+}catch(err){
+  console.error('Recovering from render error:',err);
+  // fall back to a clean check-in view so the screen is never blank
+  const ca=document.getElementById('checkinArea'); if(ca) ca.style.display='block';
+  const sa=document.getElementById('sessionArea'); if(sa) sa.style.display='none';
+}
+</script>
+</body>
+</html>
